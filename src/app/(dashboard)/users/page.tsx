@@ -4,10 +4,23 @@ import type { AdminUser, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { CursorPagination } from "@/components/cursor-pagination";
+import { parseCursorParams } from "@/lib/pagination-params";
 
-export default async function UsersPage({ searchParams }: { searchParams: Promise<{ phone?: string }> }) {
-  const { phone } = await searchParams;
-  const page = await adminFetch<Page<AdminUser>>(`/users${phone ? `?phone=${encodeURIComponent(phone)}` : ""}`);
+export default async function UsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ phone?: string; cursor?: string; history?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const { phone } = resolvedSearchParams;
+  const { cursor, history } = parseCursorParams(resolvedSearchParams);
+
+  const query = new URLSearchParams();
+  if (phone) query.set("phone", phone);
+  if (cursor) query.set("cursor", cursor);
+  const qs = query.toString();
+  const page = await adminFetch<Page<AdminUser>>(`/users${qs ? `?${qs}` : ""}`);
 
   return (
     <div>
@@ -48,6 +61,14 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
           )}
         </TableBody>
       </Table>
+      <CursorPagination
+        basePath="/users"
+        searchParams={resolvedSearchParams}
+        history={history}
+        currentCursor={cursor}
+        nextCursor={page.next_cursor}
+        count={page.items.length}
+      />
     </div>
   );
 }

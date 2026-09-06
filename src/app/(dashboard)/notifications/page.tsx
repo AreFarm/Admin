@@ -2,10 +2,18 @@ import { adminFetch } from "@/lib/api";
 import type { AdminNotification, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/status-badge";
+import { CursorPagination } from "@/components/cursor-pagination";
+import { parseCursorParams } from "@/lib/pagination-params";
 import { RetryNotificationButton } from "./retry-button";
 
-export default async function NotificationsPage() {
-  const page = await adminFetch<Page<AdminNotification>>("/notifications");
+export default async function NotificationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cursor?: string; history?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const { cursor, history } = parseCursorParams(resolvedSearchParams);
+  const page = await adminFetch<Page<AdminNotification>>(`/notifications${cursor ? `?cursor=${cursor}` : ""}`);
 
   return (
     <div>
@@ -45,6 +53,14 @@ export default async function NotificationsPage() {
           )}
         </TableBody>
       </Table>
+      <CursorPagination
+        basePath="/notifications"
+        searchParams={resolvedSearchParams}
+        history={history}
+        currentCursor={cursor}
+        nextCursor={page.next_cursor}
+        count={page.items.length}
+      />
     </div>
   );
 }

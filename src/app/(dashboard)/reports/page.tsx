@@ -2,10 +2,18 @@ import { adminFetch } from "@/lib/api";
 import type { AdminReport, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/status-badge";
+import { CursorPagination } from "@/components/cursor-pagination";
+import { parseCursorParams } from "@/lib/pagination-params";
 import { RetryReportButton } from "./retry-button";
 
-export default async function ReportsPage() {
-  const page = await adminFetch<Page<AdminReport>>("/reports");
+export default async function ReportsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cursor?: string; history?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const { cursor, history } = parseCursorParams(resolvedSearchParams);
+  const page = await adminFetch<Page<AdminReport>>(`/reports${cursor ? `?cursor=${cursor}` : ""}`);
 
   return (
     <div>
@@ -43,6 +51,14 @@ export default async function ReportsPage() {
           )}
         </TableBody>
       </Table>
+      <CursorPagination
+        basePath="/reports"
+        searchParams={resolvedSearchParams}
+        history={history}
+        currentCursor={cursor}
+        nextCursor={page.next_cursor}
+        count={page.items.length}
+      />
     </div>
   );
 }

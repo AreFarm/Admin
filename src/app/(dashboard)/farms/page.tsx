@@ -2,9 +2,17 @@ import Link from "next/link";
 import { adminFetch } from "@/lib/api";
 import type { AdminFarm, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { CursorPagination } from "@/components/cursor-pagination";
+import { parseCursorParams } from "@/lib/pagination-params";
 
-export default async function FarmsPage() {
-  const page = await adminFetch<Page<AdminFarm>>("/farms");
+export default async function FarmsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cursor?: string; history?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const { cursor, history } = parseCursorParams(resolvedSearchParams);
+  const page = await adminFetch<Page<AdminFarm>>(`/farms${cursor ? `?cursor=${cursor}` : ""}`);
 
   return (
     <div>
@@ -42,6 +50,14 @@ export default async function FarmsPage() {
           )}
         </TableBody>
       </Table>
+      <CursorPagination
+        basePath="/farms"
+        searchParams={resolvedSearchParams}
+        history={history}
+        currentCursor={cursor}
+        nextCursor={page.next_cursor}
+        count={page.items.length}
+      />
     </div>
   );
 }
