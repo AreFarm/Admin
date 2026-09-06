@@ -59,12 +59,10 @@ monorepo, so there's no shared-types package to import from.
 ## CI/CD
 
 `.github/workflows/ci.yml` runs lint + build on every PR and on push to
-`main`. `.github/workflows/deploy.yml` deploys to Vercel (preview per PR,
-production on `main`) but skips itself until these are set on the repo:
-
-- **Repo variables** (Settings → Secrets and variables → Actions → Variables):
-  `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` — from `vercel link` run once locally
-- **Repo secret**: `VERCEL_TOKEN` — a Vercel personal access token
+`main`. Deployment is handled by Vercel's native GitHub integration
+(connected via `vercel link` to the `ebi-aremieyes-projects/admin` project)
+— preview deploy per PR, production deploy on `main` — not a custom
+Actions workflow, so there's nothing to configure here for it.
 
 The org's GitHub plan doesn't support branch protection on private repos
 (needs Pro/Team), so there's no hard block on pushing to `main` yet — treat
