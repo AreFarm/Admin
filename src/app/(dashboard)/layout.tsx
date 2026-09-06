@@ -21,7 +21,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <NavLinks />
         <div className="mt-4 border-t border-sidebar-border pt-3">
           {user?.email && (
-            <p className="truncate px-2 pb-2 text-sm text-sidebar-foreground/60">{user.email}</p>
+            <p className="truncate px-2 pb-2 text-sm text-sidebar-foreground/80">{user.email}</p>
           )}
           <SignOutButton />
         </div>

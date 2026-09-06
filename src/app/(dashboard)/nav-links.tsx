@@ -31,7 +31,7 @@ export function NavLinks() {
               "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
               active
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                : "text-sidebar-foreground/90 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )}
           >
             <item.icon className="size-4 shrink-0" strokeWidth={2} />
@@ -40,7 +40,7 @@ export function NavLinks() {
               <span
                 className={cn(
                   "rounded-md border px-1.5 py-0.5 text-[0.65rem] leading-none font-semibold tracking-wide",
-                  active ? "border-sidebar-primary-foreground/40" : "border-sidebar-border text-sidebar-foreground/60",
+                  active ? "border-sidebar-primary-foreground/40" : "border-sidebar-border text-sidebar-foreground/80",
                 )}
               >
                 {item.badge}
