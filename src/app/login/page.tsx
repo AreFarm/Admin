@@ -37,7 +37,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>AreFarm Admin</CardTitle>
-          <CardDescription>Staff sign-in only — not for farmer accounts.</CardDescription>
+          <CardDescription>Staff sign-in only</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
