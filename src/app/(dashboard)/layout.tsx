@@ -1,8 +1,14 @@
 import { Sprout } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "./sign-out-button";
 import { NavLinks } from "./nav-links";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="flex h-screen overflow-hidden">
       <aside className="flex w-60 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar p-4 text-sidebar-foreground">
@@ -14,6 +20,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
         <NavLinks />
         <div className="mt-4 border-t border-sidebar-border pt-3">
+          {user?.email && (
+            <p className="truncate px-2 pb-2 text-sm text-sidebar-foreground/60">{user.email}</p>
+          )}
           <SignOutButton />
         </div>
       </aside>
