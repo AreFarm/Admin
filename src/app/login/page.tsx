@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Sprout } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,11 +34,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>AreFarm Admin</CardTitle>
-          <CardDescription>Staff sign-in only</CardDescription>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,var(--accent)_0%,transparent_60%)]"
+      />
+      <Card className="relative w-full max-w-sm shadow-lg">
+        <CardHeader className="items-center text-center">
+          <span className="mb-2 flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Sprout className="size-5" strokeWidth={2.25} />
+          </span>
+          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardDescription>Sign in to the AreFarm admin dashboard</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -64,7 +72,7 @@ export default function LoginPage() {
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="mt-1">
               {loading ? "Signing in…" : "Sign in"}
             </Button>
           </form>
