@@ -55,3 +55,17 @@ src/
 `src/lib/types.ts` deliberately duplicates shapes already defined in
 Core-Backend's Prisma schema — these are two separate repos, not one
 monorepo, so there's no shared-types package to import from.
+
+## CI/CD
+
+`.github/workflows/ci.yml` runs lint + build on every PR and on push to
+`main`. `.github/workflows/deploy.yml` deploys to Vercel (preview per PR,
+production on `main`) but skips itself until these are set on the repo:
+
+- **Repo variables** (Settings → Secrets and variables → Actions → Variables):
+  `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` — from `vercel link` run once locally
+- **Repo secret**: `VERCEL_TOKEN` — a Vercel personal access token
+
+The org's GitHub plan doesn't support branch protection on private repos
+(needs Pro/Team), so there's no hard block on pushing to `main` yet — treat
+it as PR-only by convention until the plan allows enforcing it.
