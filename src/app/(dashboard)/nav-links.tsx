@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Sprout, FileText, Bell } from "lucide-react";
+import { LayoutDashboard, Users, Sprout, FileText, Bell, RefreshCcw, Store, SlidersHorizontal } from "lucide-react";
 import { cn } from "cn";
 
 const NAV = [
@@ -11,6 +11,9 @@ const NAV = [
   { href: "/farms", label: "Farms", icon: Sprout },
   { href: "/reports", label: "Reports", icon: FileText },
   { href: "/notifications", label: "Notifications", icon: Bell },
+  { href: "/sync-health", label: "Sync health", icon: RefreshCcw, badge: "NEW" },
+  { href: "/marketplace", label: "Marketplace", icon: Store, badge: "NEW" },
+  { href: "/config", label: "Config & flags", icon: SlidersHorizontal, badge: "NEW" },
 ];
 
 export function NavLinks() {
@@ -31,8 +34,18 @@ export function NavLinks() {
                 : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )}
           >
-            <item.icon className="size-4" strokeWidth={2} />
-            {item.label}
+            <item.icon className="size-4 shrink-0" strokeWidth={2} />
+            <span className="flex-1">{item.label}</span>
+            {item.badge && (
+              <span
+                className={cn(
+                  "rounded-md border px-1.5 py-0.5 text-[0.65rem] leading-none font-semibold tracking-wide",
+                  active ? "border-sidebar-primary-foreground/40" : "border-sidebar-border text-sidebar-foreground/60",
+                )}
+              >
+                {item.badge}
+              </span>
+            )}
           </Link>
         );
       })}

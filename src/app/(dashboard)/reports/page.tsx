@@ -1,7 +1,8 @@
 import { adminFetch } from "@/lib/api";
-import type { AdminReport, Page } from "@/lib/types";
+import type { AdminReport, JobStatus, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/status-badge";
+import { StatusFilterTabs } from "@/components/status-filter-tabs";
 import { CursorPagination } from "@/components/cursor-pagination";
 import { parseCursorParams } from "@/lib/pagination-params";
 import { RetryReportButton } from "./retry-button";
@@ -9,15 +10,24 @@ import { RetryReportButton } from "./retry-button";
 export default async function ReportsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cursor?: string; history?: string }>;
+  searchParams: Promise<{ cursor?: string; history?: string; status?: JobStatus }>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const { status } = resolvedSearchParams;
   const { cursor, history } = parseCursorParams(resolvedSearchParams);
-  const page = await adminFetch<Page<AdminReport>>(`/reports${cursor ? `?cursor=${cursor}` : ""}`);
+
+  const query = new URLSearchParams();
+  if (status) query.set("status", status);
+  if (cursor) query.set("cursor", cursor);
+  const qs = query.toString();
+  const page = await adminFetch<Page<AdminReport>>(`/reports${qs ? `?${qs}` : ""}`);
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">Reports</h1>
+      <div className="mt-4">
+        <StatusFilterTabs basePath="/reports" status={status} />
+      </div>
       <Table className="mt-4">
         <TableHeader>
           <TableRow>
