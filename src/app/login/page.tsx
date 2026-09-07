@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sprout, Loader2 } from "lucide-react";
+import { Sprout } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,7 +73,6 @@ export default function LoginPage() {
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={loading} className="mt-1">
-              {loading && <Loader2 className="size-4 animate-spin" />}
               {loading ? "Signing in…" : "Sign in"}
             </Button>
           </form>
