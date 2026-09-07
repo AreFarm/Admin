@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sprout } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,15 +21,18 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    logger.info("login", "Sign-in attempt", { email });
 
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
     setLoading(false);
     if (signInError) {
+      logger.warn("login", "Sign-in failed", { email, reason: signInError.message });
       setError(signInError.message);
       return;
     }
+    logger.info("login", "Sign-in succeeded", { email });
     router.push("/");
     router.refresh();
   }
