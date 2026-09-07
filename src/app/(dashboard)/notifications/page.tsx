@@ -1,7 +1,8 @@
 import { adminFetch } from "@/lib/api";
-import type { AdminNotification, Page } from "@/lib/types";
+import type { AdminNotification, JobStatus, Page } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/status-badge";
+import { StatusFilterTabs } from "@/components/status-filter-tabs";
 import { CursorPagination } from "@/components/cursor-pagination";
 import { parseCursorParams } from "@/lib/pagination-params";
 import { RetryNotificationButton } from "./retry-button";
@@ -9,15 +10,24 @@ import { RetryNotificationButton } from "./retry-button";
 export default async function NotificationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cursor?: string; history?: string }>;
+  searchParams: Promise<{ cursor?: string; history?: string; status?: JobStatus }>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const { status } = resolvedSearchParams;
   const { cursor, history } = parseCursorParams(resolvedSearchParams);
-  const page = await adminFetch<Page<AdminNotification>>(`/notifications${cursor ? `?cursor=${cursor}` : ""}`);
+
+  const query = new URLSearchParams();
+  if (status) query.set("status", status);
+  if (cursor) query.set("cursor", cursor);
+  const qs = query.toString();
+  const page = await adminFetch<Page<AdminNotification>>(`/notifications${qs ? `?${qs}` : ""}`);
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">Notifications</h1>
+      <div className="mt-4">
+        <StatusFilterTabs basePath="/notifications" status={status} />
+      </div>
       <Table className="mt-4">
         <TableHeader>
           <TableRow>

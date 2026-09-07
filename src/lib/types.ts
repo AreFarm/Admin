@@ -14,6 +14,8 @@ export interface AdminUser {
   displayName: string | null;
   locale: string;
   roleFarmer: boolean;
+  roleSeller: boolean;
+  roleBuyer: boolean;
   createdAt: string;
   deletedAt: string | null;
 }

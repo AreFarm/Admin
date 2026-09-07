@@ -48,7 +48,14 @@ export default async function UsersPage({
               </TableCell>
               <TableCell>{user.displayName ?? "—"}</TableCell>
               <TableCell>{user.locale}</TableCell>
-              <TableCell>{user.roleFarmer ? <Badge variant="secondary">Farmer</Badge> : "—"}</TableCell>
+              <TableCell>
+                <div className="flex gap-1">
+                  {user.roleFarmer && <Badge variant="secondary">Farmer</Badge>}
+                  {user.roleSeller && <Badge variant="secondary">Seller</Badge>}
+                  {user.roleBuyer && <Badge variant="secondary">Buyer</Badge>}
+                  {!user.roleFarmer && !user.roleSeller && !user.roleBuyer && "—"}
+                </div>
+              </TableCell>
               <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
             </TableRow>
           ))}
